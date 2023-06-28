@@ -11,5 +11,5 @@ const port = 3000;
 //     res.send('heome world')
 // });
 app.listen(port, () => {
-    console.log(`Server connected to port http://localhost:${port}`);
+    console.log(`Server connected to port http://192.168.0.102:${port}`);
 });
