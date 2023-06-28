@@ -34,11 +34,13 @@ class _LoginState extends State<Login> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 InputField(
+                  height: size.height * 0.07,
                     hintText: 'Enter email', controller: emailController),
                 SizedBox(
                   height: size.height * 0.03,
                 ),
                 InputField(
+                  height: size.height * 0.07,
                     hintText: 'Enter password', controller: passController),
                 SizedBox(
                   height: size.height * 0.03,
