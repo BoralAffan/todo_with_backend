@@ -38,16 +38,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                InputField(hintText: 'Enter name', controller: nameController),
+                InputField(hintText: 'Enter name',height: size.height * 0.07, controller: nameController),
                 SizedBox(
                   height: size.height * 0.03,
                 ),
                 InputField(
-                    hintText: 'Enter email', controller: emailController),
+                    hintText: 'Enter email',height: size.height * 0.07, controller: emailController),
                 SizedBox(
                   height: size.height * 0.03,
                 ),
-                InputField(
+                InputField( height: size.height * 0.07,
                     hintText: 'Enter password', controller: passController),
                 SizedBox(
                   height: size.height * 0.03,
