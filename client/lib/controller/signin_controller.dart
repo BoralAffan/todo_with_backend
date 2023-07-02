@@ -33,8 +33,9 @@ class SigninController extends GetxController {
       List<Todo> temp = [];
       print('entered todos');
       var response = await Services.getTodo();
+
       if (response.statusCode == 200) {
-        isTodoLoading = false;
+        
         print('200');
         print(response.body.toString());
         final List<dynamic> decodedResponse = jsonDecode(response.body);
@@ -42,10 +43,30 @@ class SigninController extends GetxController {
       } else if (response.statusCode == 500) {
         print('something went wrong');
       }
+         isTodoLoading = false;
+    update();
       return temp;
     } catch (error) {
       throw 'something went wrong';
     }
+  }
+
+  Future<void> updateTodo(
+      String id, String title, String description, BuildContext context) async {
+    try {
+      print('update called');
+      print(id + "       " + title + "     " + description);
+      var response = await Services.updateTodo(id, title, description);
+      print(response.statusCode);
+      print(response.body.toString());
+      if (response.statusCode == 200) {
+        showErrorSnackbar('Success', 'Sucessfully updated your changes');
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Home()));
+      } else if (response.statusCode == 500) {
+        showErrorSnackbar('feature unable', 'Under progress');
+      }
+    } catch (error) {}
   }
 
   Future<void> deleteTodo(String id, BuildContext context) async {
@@ -54,7 +75,7 @@ class SigninController extends GetxController {
       if (response.statusCode == 200) {
         showErrorSnackbar('DELETED', 'Successfully deleted todo');
         Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Home()));
+            context, MaterialPageRoute(builder: (context) => Home()));
         print('deleted');
       }
     } catch (error) {
@@ -64,9 +85,12 @@ class SigninController extends GetxController {
 
   Future<void> createNewTodo(String title, String description) async {
     try {
+      isTodoLoading = true;
       var response = await Services.createTodo(title, description);
 
       if (response.statusCode == 201) {
+        isTodoLoading = false;
+        update();
         showErrorSnackbar('success', 'Todo created Successfully');
       } else if (response.statusCode == 500) {
         showErrorSnackbar('Failed', 'Something went wrong');

@@ -21,8 +21,8 @@ router.put('/updateTodo', async (req, res) => {
         const { id, title, description } = req.body;
         const todo = await TodoModel.findById(id);
 
-        if (!todo) {
-            return res.status(404).json({ error: "Todo not found" })
+        if (!ObjectId.isValid(id)) {
+            return res.status(400).json({ error: "Invalid todo ID" });
         }
 
         todo.title = title;

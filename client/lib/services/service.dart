@@ -39,6 +39,19 @@ class Services {
     return response;
   }
 
+  static Future<http.Response> updateTodo(
+      String id, String title, String description) async {
+    Uri url = Uri.parse('${ApiEndpoints.baseUrl}/todos/updateTodo');
+
+    Map body = {"id": id, "title": title, "description": description};
+    var response = await http.put(url, body: jsonEncode(body), headers: {
+      'Content-Type': 'application/json',
+      'request-from': 'app',
+      // 'Authorization': 'Bearer ${token}'
+    });
+    return response;
+  }
+
   static Future<http.Response> getTodo() async {
     Uri url = Uri.parse('${ApiEndpoints.baseUrl}/todos/getTodos');
     http.Response response = await http.get(url);
