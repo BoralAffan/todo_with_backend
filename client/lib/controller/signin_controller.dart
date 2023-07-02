@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:client/model/todo_model.dart';
 import 'package:client/screens/home.dart';
 import 'package:client/screens/login.dart';
 import 'package:client/services/service.dart';
@@ -10,6 +11,7 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 class SigninController extends GetxController {
   bool isLoading = false;
   String uid = '';
+  bool isTodoLoading = false;
   void showErrorSnackbar(title, msg, {seconds = 2}) {
     Get.closeAllSnackbars();
     Get.snackbar(
@@ -23,6 +25,55 @@ class SigninController extends GetxController {
       snackPosition: SnackPosition.BOTTOM,
       margin: const EdgeInsets.all(6),
     );
+  }
+
+  Future<List<Todo>> getTodos() async {
+    try {
+      isTodoLoading = true;
+      List<Todo> temp = [];
+      print('entered todos');
+      var response = await Services.getTodo();
+      if (response.statusCode == 200) {
+        isTodoLoading = false;
+        print('200');
+        print(response.body.toString());
+        final List<dynamic> decodedResponse = jsonDecode(response.body);
+        return decodedResponse.map((json) => Todo.fromJson(json)).toList();
+      } else if (response.statusCode == 500) {
+        print('something went wrong');
+      }
+      return temp;
+    } catch (error) {
+      throw 'something went wrong';
+    }
+  }
+
+  Future<void> deleteTodo(String id, BuildContext context) async {
+    try {
+      var response = await Services.deleteTodo(id);
+      if (response.statusCode == 200) {
+        showErrorSnackbar('DELETED', 'Successfully deleted todo');
+        Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Home()));
+        print('deleted');
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> createNewTodo(String title, String description) async {
+    try {
+      var response = await Services.createTodo(title, description);
+
+      if (response.statusCode == 201) {
+        showErrorSnackbar('success', 'Todo created Successfully');
+      } else if (response.statusCode == 500) {
+        showErrorSnackbar('Failed', 'Something went wrong');
+      }
+    } catch (error) {
+      print(error);
+    }
   }
 
   Future<void> loginUser(
@@ -41,17 +92,16 @@ class SigninController extends GetxController {
 
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Home()));
-      }else if (response.statusCode == 401) {
+      } else if (response.statusCode == 401) {
         isLoading = false;
         update();
-        showErrorSnackbar('Invalid Credentials', 'Incorrect Password please correct it');
-      } 
-      
-      else if (response.statusCode == 404) {
+        showErrorSnackbar(
+            'Invalid Credentials', 'Incorrect Password please correct it');
+      } else if (response.statusCode == 404) {
         isLoading = false;
         update();
-        showErrorSnackbar('USER NOT FOUND',
-            'Account does not exist. please register first');
+        showErrorSnackbar(
+            'USER NOT FOUND', 'Account does not exist. please register first');
       } else if (response.statusCode == 500) {
         isLoading = false;
         update();

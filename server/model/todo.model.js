@@ -17,8 +17,14 @@ const todoSchema = new Schema({
 
     createdAt: {
         type: Date,
-        default: Date.now
+
+        default: () => new Date().toUTCString()
     }
+},
+    { toJSON: { virtuals: true }, id: false }
+);
+todoSchema.virtual('id').get(function () {
+    return this._id.toHexString();
 });
 
 const todoModel = db.model('todo', todoSchema);

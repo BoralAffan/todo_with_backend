@@ -1,16 +1,16 @@
-const mongoose= require('mongoose');
+const mongoose = require('mongoose');
 const db = require('../config/db');
 
-const {Schema}= mongoose;
+const { Schema } = mongoose;
 
 const userSchema = new Schema({
 
-    name:{
+    name: {
         type: String,
         default: ''
     },
 
-    email:{
+    email: {
         type: String,
         lowercase: true,
         required: true,
@@ -21,8 +21,13 @@ const userSchema = new Schema({
         type: String,
         required: true
     }
+},
+    { toJSON: { virtuals: true }, id: false }
+);
+userSchema.virtual('id').get(function () {
+    return this._id.toHexString();
 });
 
-const userModel= db.model('user',userSchema);
+const userModel = db.model('user', userSchema);
 
 module.exports = userModel;

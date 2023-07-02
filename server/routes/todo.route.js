@@ -9,7 +9,7 @@ router.post('/createTodo', async (req, res) => {
         const { title, description } = req.body;
         const todo = new TodoModel({ title, description });
         await todo.save();
-        res.status(201).json({ message: 'todo created successfully' });
+        res.status(201).json({ todo, message: 'todo created successfully' });
     } catch (error) {
         console.error('Error registering user:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -48,7 +48,7 @@ router.delete('/deleteTodo', async (req, res) => {
 
         // Delete the todo
         await TodoModel.findByIdAndDelete(id);
-        res.json({ message: 'Todo deleted successfully' });
+        res.status(200).json({ message: 'Todo deleted successfully' });
     } catch (error) {
         console.error('Error deleting todo:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -58,7 +58,8 @@ router.delete('/deleteTodo', async (req, res) => {
 
 router.get('/getTodos', async (req, res) => {
     try {
-        const todos = await TodoModel.find({});
+        // const todos = await TodoModel.find({});
+        const todos = await TodoModel.find().sort({ createdAt: -1 });
         res.status(200).json(todos)
     } catch (error) {
         console.log(error);

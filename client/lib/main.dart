@@ -1,4 +1,5 @@
 import 'package:client/controller/signin_controller.dart';
+import 'package:client/screens/home.dart';
 import 'package:client/screens/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,6 +22,7 @@ class _MyAppState extends State<MyApp> {
     return GetMaterialApp(
         title: 'Todo App',
         debugShowCheckedModeBanner: false,
-        home: SignUpScreen());
+        // home: SignUpScreen()
+        home: Home());
   }
 }
